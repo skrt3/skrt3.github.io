@@ -1,0 +1,178 @@
+<html>
+<style>
+div.top {
+    position: fixed;
+    top: 0vh;
+    left: 20%;
+    width: 60%;
+    height: 10%;
+    font-size: 9.0vmin;
+    }
+
+div.left {
+    position: fixed;
+    top: 20vh;
+    width: 50vw;
+    max-height: 10vh;
+    margin-bottom: 5px;
+    font-size: 4.1vmin;
+    white-space:nowrap;
+
+    }
+div.right {
+    position: fixed;
+    top: 20vh;
+    max-height: 10vh;
+    right:0;
+    width:50vw;
+    font-size: 4.1vmin;
+    white-space:nowrap;
+
+    }
+
+div.list {
+    position: fixed;
+    top: 25%;
+    left: 30%;
+    width: 40%;
+    height: 100%;
+    font-size: 5.0vmin;
+
+    text-align: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    }
+img {
+    top:auto;
+    max-height: 390px;
+    width: 40vw;
+    object-fit:contain;
+}
+</style>
+<body {overflow-y: scroll}>
+<center>
+<font face  = "Helvetica" size = 19px >
+<div class = top>
+    <p id = "title" >MARVEL WOMAN RANKINGS</p>
+</div>
+<div class = list>
+    <p id = "list"></p>
+</div>
+<div class = left onclick="lesser()">
+    <p id = "player1">test</p>
+    <img id = "p1img" src="" height=auto alt="">
+</div>
+<div class = right onclick="greater()">
+    <p id = "player2">test2</p>
+    <img id = "p2img" src="" height=auto alt="">
+</div>
+</body>
+<script>
+    var index = 0
+    var master = "Brie Larson,Elizabeth Olsen,Florence Pugh,Pepper Potts,Scarlett Johansson,Zendaya,Hailee Steinfeld,Hayley Atwell,Marisa Tomei"
+    master = master.split(",")
+    shuffleArray(master)
+    dict = {
+        "Brie Larson" : "https://s2.r29static.com/bin/entry/d5d/x,80/2140188/image.jpg",
+        "Elizabeth Olsen" : "https://laverdadnoticias.com/__export/1621824086897/sites/laverdad/img/2021/05/23/elizabeth_olsen_wanda_maximoff_poderes.jpeg_1076173537.jpeg",
+        "Florence Pugh" : "https://thewatchdog.news/wp-content/uploads/2022/03/Florence-Pugh.jpeg",
+        "Pepper Potts" : "https://media1.popsugar-assets.com/files/thumbor/bjcGX2hrBE9_EMhOkiXDPioSnYg/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2019/02/19/787/n/1922283/81735ef65c6c42ab73ad26.31641769_/i/Why-Gwyneth-Paltrow-Retiring-From-Marvel-Movies.jpg",
+        "Scarlett Johansson" : "https://media1.popsugar-assets.com/files/thumbor/WZNrDj--WepZK2FhRlCkvgLfE-U/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2012/05/19/1/192/1922283/ad229827022ab33b_GH-04857_R/i/Scarlett-Johansson-Black-Widow-Avengers.jpg",
+        "Zendaya" : "https://www.jacketars.com/wp-content/uploads/2021/12/Spider-Man-No-Way-Home-MJ-Coat.webp",
+        "Hailee Steinfeld" : "https://images.thedirect.com/media/photos/hawkeyeses.jpg",
+        "Hayley Atwell" : "https://www.theplace2.ru/cache/archive/hayley_atwell/img/2011-captain-america(3)-gthumb-gwdata1200-ghdata1200-gfitdatamax.jpg",
+        "Marisa Tomei" : "https://pyxis.nymag.com/v1/imgs/f75/d6f/05eaeb774785cb8a19a5aea5a1700d86a0-08-marisa-tomei-spider-man-homecoming.rsquare.w700.jpg",
+    }
+    var memo = []
+    for (let y = 0; y < master.length; y++) {
+        var girl = master[y];
+        preloadImage(dict[girl]);
+        player1_setter()
+        player2_setter() 
+    }
+    player1_setter()
+    player2_setter()
+    function lesser(){
+        memo.push([master[index], master[index + 1]].join("/"))
+        ichecker()
+        while(lookup(index) == true){
+            index += 1
+            player1_setter()
+            player2_setter()
+            if (finisher() == true){
+                list_setter()
+                break
+            }
+        }
+    }
+    function greater(){
+        memo.push([master[index + 1], master[index]].join("/"))
+        ichecker();
+        [master[index],master[index+1]] = [master[index+1], master[index]]
+        while(lookup(index) == true){
+            index += 1
+            player1_setter()
+            player2_setter()
+            if (finisher() == true){
+                list_setter()
+                break
+            }
+        }
+    }
+    function player1_setter() {
+        ichecker()
+        document.getElementById("p1img").src = dict[master[index]]
+        document.getElementById("player1").innerHTML = master[index].toUpperCase()
+
+    }
+    function player2_setter() {
+        ichecker()
+        document.getElementById("p2img").src = dict[master[index+1]]
+        document.getElementById("player2").innerHTML = master[index + 1].toUpperCase()
+
+    }
+    function list_setter() {
+        document.getElementById("player1").remove()
+        document.getElementById("player2").remove()
+        document.getElementById("p1img").remove()
+        document.getElementById("p2img").remove()
+        var str = ""
+        for (let index = 0; index < 9; index++) {
+            var element = master[index];
+            num = index + 1
+            str += num + ". " + element + "<br/>"
+        }
+        document.getElementById("list").innerHTML = str
+    }
+    function ichecker() {
+        if (index == master.length - 1) {
+            index *= 0
+        }
+    }
+    function lookup(search) {
+        return memo.includes([master[search], master[search + 1]].join("/"))
+    }
+    function finisher(){
+        for (let index = 0; index < master.length - 1; index++) {
+            if (lookup(index) == false){
+                return false
+            }
+            
+        }
+        return true
+    }
+    function preloadImage(url) {
+        var img= new Image()
+        img.src=url
+    }
+    function shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+    }
+}
+</script>
+
+</html>
